@@ -1,0 +1,160 @@
+{
+  "id": "comma1ter",
+  "title": "48-bis comma 1-ter (professionisti fino a 5.000 €)",
+  "description": "Verifica Soggetto Beneficiario 48-bis comma 1-ter",
+  "version": "2026.09.18-2",
+  "schema": 1,
+  "sites": [
+    "https://*/MorosiWeb/*",
+    "http://localhost/MorosiWeb/*"
+  ],
+  "columns": {
+    "tipo": 2,
+    "cf": 3,
+    "protocollo": 4,
+    "importoInt": 5,
+    "importoDec": 6
+  },
+  "required": [
+    "cf",
+    "protocollo",
+    "importoInt"
+  ],
+  "guard": {
+    "present": [
+      "form[name^='ricercaMorosita']:not([name='ricercaMorositaStipendiForm']) input[name='soggetto.cf']"
+    ],
+    "message": "Pagina non corretta: apri il form di ricerca giusto (48-bis comma 1-ter (professionisti fino a 5.000 €)) e premi Riprendi: la riga verrà rielaborata."
+  },
+  "fields": {
+    "tipoSoggetto": [
+      "form[name^='ricercaMorosita']:not([name='ricercaMorositaStipendiForm']) select[name='soggetto.tipoSoggetto']"
+    ],
+    "cf": [
+      "form[name^='ricercaMorosita']:not([name='ricercaMorositaStipendiForm']) input[name='soggetto.cf']",
+      "input[name='soggetto.cf']"
+    ],
+    "protocollo": [
+      "form[name^='ricercaMorosita']:not([name='ricercaMorositaStipendiForm']) input[name='soggetto.protocollo']",
+      "input[name='soggetto.protocollo']"
+    ],
+    "importo": [
+      "form[name^='ricercaMorosita']:not([name='ricercaMorositaStipendiForm']) input[name='soggetto.importo']",
+      "input[name='soggetto.importo']"
+    ],
+    "ack": [
+      "form[name^='ricercaMorosita']:not([name='ricercaMorositaStipendiForm']) input[type='checkbox'][id*='ack' i], form[name^='ricercaMorosita']:not([name='ricercaMorositaStipendiForm']) input[type='checkbox'][name*='ack' i]"
+    ],
+    "submit": [
+      "form[name^='ricercaMorosita']:not([name='ricercaMorositaStipendiForm']) input[type='submit'][value='Verifica']"
+    ],
+    "nuovaRicerca": [
+      "form[name='dettagliMorositaForm'] input[name='bottoneSubmit'][value='Nuova Ricerca']",
+      "input[name='bottoneSubmit'][value='Nuova Ricerca']",
+      "input[name='bottoneSubmit']"
+    ]
+  },
+  "healthSkip": [
+    "nuovaRicerca"
+  ],
+  "steps": [
+    {
+      "do": "select",
+      "field": "tipoSoggetto",
+      "value": "{tipo}",
+      "optional": true
+    },
+    {
+      "do": "wait",
+      "ms": 400
+    },
+    {
+      "do": "type",
+      "field": "cf",
+      "value": "{cf}"
+    },
+    {
+      "do": "type",
+      "field": "protocollo",
+      "value": "{protocollo}"
+    },
+    {
+      "do": "type",
+      "field": "importo",
+      "value": "{importo}"
+    },
+    {
+      "do": "check",
+      "field": "ack",
+      "all": true,
+      "optional": true
+    },
+    {
+      "do": "click",
+      "field": "submit"
+    }
+  ],
+  "outcomes": [
+    {
+      "name": "adempiente",
+      "bodyContains": "SOGGETTO NON INADEMPIENTE",
+      "then": [
+        "click:nuovaRicerca",
+        "next"
+      ]
+    },
+    {
+      "name": "errore",
+      "present": "xpath=//div[@id='aazone.aaErrors'][normalize-space(.)!='']",
+      "message": "Riga {riga} (CF {cf}): il portale ha segnalato un errore. Controlla la pagina, torna al form di ricerca e premi Riprendi per passare alla riga successiva.",
+      "then": [
+        "pause",
+        "next"
+      ]
+    },
+    {
+      "name": "errore",
+      "bodyContains": [
+        "Sono stati rilevati degli errori",
+        "Cliccare qui per maggiori dettagli"
+      ],
+      "message": "Riga {riga} (CF {cf}): il portale ha segnalato un errore. Controlla la pagina, torna al form di ricerca e premi Riprendi per passare alla riga successiva.",
+      "then": [
+        "pause",
+        "next"
+      ]
+    },
+    {
+      "name": "conferma_dati",
+      "bodyContains": "Per terminare l' inserimento della richiesta è necessario confermare i dati dei documenti",
+      "message": "Riga {riga} (CF {cf}): il portale chiede la conferma dei dati dei documenti. Completa manualmente, torna al form di ricerca e premi Riprendi.",
+      "then": [
+        "pause",
+        "next"
+      ]
+    },
+    {
+      "name": "inadempiente",
+      "present": "form[name='dettagliMorositaForm']",
+      "message": "SOGGETTO INADEMPIENTE - riga {riga}, CF {cf}, importo {importo}. Gestisci manualmente i dati degli agenti, torna al form di ricerca e premi Riprendi.",
+      "then": [
+        "pause",
+        "next"
+      ]
+    }
+  ],
+  "fallback": {
+    "name": "non_previsto",
+    "message": "Riga {riga} (CF {cf}): esito non previsto, la pagina non è né il dettaglio morosità né un errore noto. Controlla manualmente.",
+    "then": [
+      "pause",
+      "next"
+    ]
+  },
+  "timing": {
+    "guardWaitMs": 4000,
+    "waitOutcomeMs": 6000,
+    "afterSelectMs": 400,
+    "afterNewSearchMs": 500
+  }
+}

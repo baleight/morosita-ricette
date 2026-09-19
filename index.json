@@ -1,0 +1,29 @@
+{
+  "generated": "2026-09-18T18:05:14.431Z",
+  "recipes": [
+    {
+      "id": "comma1",
+      "version": "2026.09.18-2",
+      "url": "recipes/comma1.json",
+      "sha256": "b3c83cd8ad3598cb499687f301d2c6b4836348e6c1539ff308464e296fbb3b80",
+      "sig": "G8sCC3WsGgj3vKtzJT6XkJ3pYKxxPIiFU8U7D1DysvGzT2DnxUG3Pk96afpS+KuvUe1vmIBgoFpKadOqhhsa9Q==",
+      "minExtension": "1.0.0"
+    },
+    {
+      "id": "comma1bis",
+      "version": "2026.09.18-2",
+      "url": "recipes/comma1bis.json",
+      "sha256": "00ae0bf5a9c4fb86cc2b80d5572b7ce55b3e4818a2b44fe99fcb5f839f35db1d",
+      "sig": "ZNmE8AR+uTMGt+5iGSzxp8K9srT0kI3ZUBjiU+lNATsyVnpalL5Tf52Emg4vfbOxRzU/W3LUOA2Y/BJFyHwhTg==",
+      "minExtension": "1.0.0"
+    },
+    {
+      "id": "comma1ter",
+      "version": "2026.09.18-2",
+      "url": "recipes/comma1ter.json",
+      "sha256": "fec4472ce99db5811f78151cf5808e324ab8a1582ba4cff7dfa7e696b9a7c7ec",
+      "sig": "i5iy/NNe7GPBtRo7oXUOyl7lzhjNCJSqdgF7m6cKv/4bGLIrI6TgvgzOvdfo1l+G4J581SKvWC1uv1YU3J+XFg==",
+      "minExtension": "1.0.0"
+    }
+  ]
+}
